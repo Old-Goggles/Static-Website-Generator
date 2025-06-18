@@ -5,7 +5,7 @@ def split_nodes_image(old_nodes):
     new_nodes = []
     for node in old_nodes:
         if node.text_type == TextType.TEXT:
-            result = extract_markdown_images(node)
+            result = extract_markdown_images(node.text)
             if result == []:
                 new_nodes.append(node)
             else:
@@ -28,7 +28,7 @@ def split_nodes_link(old_nodes):
     new_nodes = []
     for node in old_nodes:
         if node.text_type == TextType.TEXT:
-            result = extract_markdown_links(node)
+            result = extract_markdown_links(node.text)
             if result == []:
                 new_nodes.append(node)
             else:
