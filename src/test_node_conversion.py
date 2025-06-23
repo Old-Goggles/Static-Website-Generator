@@ -72,3 +72,125 @@ class TestNodeConversion(unittest.TestCase):
         result = text_to_textnodes(text)
         expected = []
         self.assertEqual(result, expected)
+
+    def test_paragraphs(self):
+        md = """
+    This is **bolded** paragraph
+    text in a p
+    tag here
+
+    This is another paragraph with _italic_ text and `code` here
+
+    """
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><p>This is <b>bolded</b> paragraph text in a p tag here</p><p>This is another paragraph with <i>italic</i> text and <code>code</code> here</p></div>",
+        )
+
+    def test_codeblock(self):
+        md = """
+    ```
+    This is text that _should_ remain
+    the **same** even with inline stuff
+    ```
+    """
+
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><pre><code>This is text that _should_ remain\nthe **same** even with inline stuff\n</code></pre></div>",
+        )
+
+    def test_heading(self):
+        md ="""
+    # Heading 1
+
+    ## Heading 2
+
+    ### Heading 3
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>Heading 1</h1><h2>Heading 2</h2><h3>Heading 3</h3></div>",
+        )
+
+    def test_unordered_list(self):
+        md = """
+    - First item
+    - Second **bold**
+    - Third with `code`
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><ul><li>First item</li><li>Second <b>bold</b></li><li>Third with <code>code</code></li></ul></div>",
+        )
+
+    def test_ordered_list(self):
+        md = """
+    1. First item
+    2. Second with _italic_
+    3. Third with `code`
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+             "<div><ol><li>First item</li><li>Second with <i>italic</i></li><li>Third with <code>code</code></li></ol></div>",
+        )
+
+    def test_blockquote(self):
+        md = """
+    > This is a blockquote
+    > with a second line.
+    >
+    > **Bold** and _italic_ text inside!
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><blockquote>This is a blockquote with a second line.</blockquote><blockquote><b>Bold</b> and <i>italic</i> text inside!</blockquote></div>",
+        )
+    
+    def test_empty_lines_and_whitespace(self):
+        md = """
+
+    # A heading
+
+
+    Paragraph with extra empty lines above and below.
+
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>A heading</h1><p>Paragraph with extra empty lines above and below.</p></div>",
+        )
+
+    def test_mixed_content(self):
+        md = """
+    # Main Title
+
+    Paragraph with *italic* and a `code` span.
+
+    > A quote block.
+
+    - List
+    - Items
+    - Here
+    """
+        node = markdown_to_html_node(md)
+        html = node.to_html()
+        self.assertEqual(
+            html,
+            "<div><h1>Main Title</h1><p>Paragraph with <i>italic</i> and a <code>code</code> span.</p><blockquote>A quote block.</blockquote><ul><li>List</li><li>Items</li><li>Here</li></ul></div>",
+        )

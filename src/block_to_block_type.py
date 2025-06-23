@@ -12,12 +12,12 @@ def block_to_block_type(markdown):
     if markdown.startswith("```") and markdown.endswith("```"):
         return BlockType.CODE
     lines = markdown.splitlines()
-    if all(line.startswith(">") for line in lines):
+    if all(line.strip() == "" or line.lstrip().startswith(">") for line in lines):
         return BlockType.QUOTE
-    if all(line.startswith("- ") for line in lines):
+    if all(line.lstrip().startswith("- ") for line in lines):
         return BlockType.UNORDERED_LIST
     for i, line in enumerate(lines, start=1):
-        if not line.startswith(f"{i}. "):
+        if not line.lstrip().startswith(f"{i}. "):
             break
     else:
         return BlockType.ORDERED_LIST
