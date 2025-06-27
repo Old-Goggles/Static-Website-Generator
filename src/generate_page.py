@@ -2,6 +2,7 @@ from node_conversion import markdown_to_html_node
 from extract_title import extract_title
 import os
 
+
 def generate_page(from_path, template_path, dest_path):
     print("Generating page from source to destination using provided template")
     with open(from_path) as file:
